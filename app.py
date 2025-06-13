@@ -16,7 +16,8 @@ def check_gmails_with_emailscan(gmails):
     # Pas besoin de Service si chromedriver est dans le PATH
     valid_emails = []
     try:
-        driver = webdriver.Chrome(options=chrome_options)
+        service = Service('/usr/bin/chromedriver')  # ou '/usr/local/bin/chromedriver' selon l'image
+        driver = webdriver.Chrome(service=service, options=chrome_options)
         for i in range(0, len(gmails), 10):
             batch = gmails[i:i+10]
             print(f"DEBUG: Batch {i//10+1} envoyé à emailscan.in:", batch, flush=True)
