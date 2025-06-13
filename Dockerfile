@@ -1,4 +1,4 @@
-FROM zenika/alpine-chrome:137
+FROM zenika/alpine-chrome:latest
 
 USER root
 RUN apk add --no-cache python3 py3-pip curl unzip
