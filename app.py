@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 import time
 import os
 
@@ -14,13 +13,7 @@ def check_gmails_with_emailscan(gmails):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # Log les fichiers présents dans /opt/selenium
-    try:
-        print("DEBUG: Fichiers dans /opt/selenium :", os.listdir('/opt/selenium'), flush=True)
-    except Exception as e:
-        print("ERREUR: Impossible de lister /opt/selenium :", e, flush=True)
-    # Utilise le chemin /opt/selenium/chromedriver
-    service = Service('/usr/local/bin/chromedriver')
+    # Pas besoin de Service si chromedriver est dans le PATH
     valid_emails = []
     try:
         driver = webdriver.Chrome(options=chrome_options)
