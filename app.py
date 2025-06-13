@@ -62,8 +62,19 @@ def check_gmails_with_emailscan(gmails):
                 print("ERREUR: Screenshot failed:", e, flush=True)
 
             try:
-                # ✅ Nouveau XPath plus fiable
-                results = driver.find_elements(By.XPATH, '//div[contains(@class, "flex") and contains(@class, "items-center")]/div/span')
+                # ✅ Attente dynamique que les résultats contenant des @gmail.com soient visibles
+                WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '//div[contains(@class, "overflow-auto")]//span[contains(text(), "@gmail.com")]')
+                    )
+                )
+
+                # ✅ Sélecteur plus précis
+                results = driver.find_elements(
+                    By.XPATH,
+                    '//div[contains(@class, "overflow-auto")]//span[contains(text(), "@gmail.com")]'
+                )
+
                 print("DEBUG: Nombre d'éléments trouvés:", len(results), flush=True)
                 for el in results:
                     print(" -", el.text, flush=True)
