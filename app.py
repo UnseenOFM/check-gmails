@@ -11,14 +11,14 @@ app = Flask(__name__)
 def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
 
-    # Installer automatiquement la bonne version de chromedriver
-    driver_path = chromedriver_autoinstaller.install()
-    print("CHROMEDRIVER installed to:", driver_path, flush=True)
+    # Installe automatiquement chromedriver
+    chromedriver_autoinstaller.install()
 
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
 
     valid_emails = []
     try:
