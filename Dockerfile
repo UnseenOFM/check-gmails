@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y google-chrome-stable
 
 # Install ChromeDriver
 RUN apt-get install -y unzip
-RUN wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/137.0.7151.70/chromedriver_linux64.zipRUN unzip /tmp/chromedriver.zip -d /usr/local/bin/
+RUN wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/137.0.7151.70/chromedriver_linux64.zip
+RUN unzip /tmp/chromedriver.zip -d /usr/local/bin/
 RUN chmod +x /usr/local/bin/chromedriver
 
 # Set display port to avoid crash
