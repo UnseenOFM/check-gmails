@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import os
 
@@ -11,7 +10,7 @@ app = Flask(__name__)
 
 def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
-    
+
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
@@ -20,8 +19,8 @@ def check_gmails_with_emailscan(gmails):
 
     valid_emails = []
     try:
-        driver_path = ChromeDriverManager().install()
-        service = Service(driver_path)
+        # ← Utilisation directe du bon chemin
+        service = Service("/usr/local/bin/chromedriver")
         driver = webdriver.Chrome(service=service, options=chrome_options)
 
         for i in range(0, len(gmails), 10):
