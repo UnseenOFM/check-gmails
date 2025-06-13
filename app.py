@@ -11,11 +11,11 @@ app = Flask(__name__)
 def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
     chrome_options = Options()
-    chrome_options.binary_location = "/usr/bin/google-chrome-stable"
+    chrome_options.binary_location = "/usr/bin/chromium-browser"  # ← CORRECT
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # Pas besoin de Service si chromedriver est dans le PATH
+    
     valid_emails = []
     try:
         service = Service('/usr/local/bin/chromedriver')  # ou '/usr/local/bin/chromedriver' selon l'image
