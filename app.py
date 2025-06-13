@@ -20,7 +20,7 @@ def check_gmails_with_emailscan(gmails):
     except Exception as e:
         print("ERREUR: Impossible de lister /opt/selenium :", e, flush=True)
     # Utilise le chemin /opt/selenium/chromedriver
-    service = Service('/opt/selenium/chromedriver-137.0.7151.68')
+    service = Service('/usr/bin/chromedriver')
     valid_emails = []
     try:
         driver = webdriver.Chrome(service=service, options=chrome_options)
