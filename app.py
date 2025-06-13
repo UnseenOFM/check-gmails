@@ -13,7 +13,6 @@ app = Flask(__name__)
 def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
 
-    # Installe automatiquement chromedriver
     chromedriver_autoinstaller.install()
 
     chrome_options = Options()
@@ -78,7 +77,15 @@ def check_gmails_with_emailscan(gmails):
 def check_gmails():
     data = request.get_json()
     print("DEBUG: Données reçues dans la requête:", data, flush=True)
-    gmails = data.get("emails", [])
+
+    emails_raw = data.get("emails", [])
+    if isinstance(emails_raw, str):
+        gmails = [e.strip() for e in emails_raw.replace(",", "\n").splitlines() if e.strip()]
+    elif isinstance(emails_raw, list):
+        gmails = emails_raw
+    else:
+        gmails = [e.strip() for e in str(emails_raw).replace(",", "\n").splitlines() if e.strip()]
+
     valid_gmails = check_gmails_with_emailscan(gmails)
     print("DEBUG: Emails valides retournés:", valid_gmails, flush=True)
     return jsonify({"valid_emails": valid_gmails})
