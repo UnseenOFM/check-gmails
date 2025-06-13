@@ -1,5 +1,6 @@
 FROM zenika/alpine-chrome:latest
 
+USER root
 # Installe Python 3 et pip
 RUN apk add --no-cache python3 py3-pip
 
