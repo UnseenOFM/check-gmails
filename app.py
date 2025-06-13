@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 import time
 import os
 
@@ -12,9 +13,11 @@ def check_gmails_with_emailscan(gmails):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    driver = webdriver.Chrome(options=chrome_options)
+    # Force explicit path to chromedriver
+    service = Service('/usr/local/bin/chromedriver')
     valid_emails = []
     try:
+        driver = webdriver.Chrome(service=service, options=chrome_options)
         for i in range(0, len(gmails), 10):
             batch = gmails[i:i+10]
             gmails_input = "\n".join(batch)
@@ -36,7 +39,10 @@ def check_gmails_with_emailscan(gmails):
     except Exception as e:
         print("Erreur Selenium:", e)
     finally:
-        driver.quit()
+        try:
+            driver.quit()
+        except:
+            pass
     return valid_emails
 
 @app.route('/check_gmails', methods=['POST'])
