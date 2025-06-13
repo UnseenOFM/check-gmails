@@ -3,14 +3,14 @@ FROM zenika/alpine-chrome:latest
 USER root
 RUN apk add --no-cache python3 py3-pip curl unzip
 
+# Copier le fichier zip téléchargé
 COPY chromedriver-linux64.zip /tmp/chromedriver.zip
 
-RUN unzip /tmp/chromedriver.zip -d /usr/local/bin && \
+# Extraire et déplacer le chromedriver
+RUN unzip /tmp/chromedriver.zip -d /tmp/chromedriver && \
+    mv /tmp/chromedriver/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver && \
-    rm -rf /tmp/chromedriver.zip
-
-# Vérification debug
-RUN ls -al /usr/local/bin && which chromedriver || echo "chromedriver NOT found"
+    rm -rf /tmp/chromedriver /tmp/chromedriver.zip
 
 WORKDIR /app
 COPY . /app
