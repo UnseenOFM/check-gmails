@@ -1,20 +1,18 @@
 FROM zenika/alpine-chrome:latest
+
 USER root
 
-# Install Python, pip, curl, unzip
 RUN apk add --no-cache python3 py3-pip curl unzip
 
-# Set matching ChromeDriver version (compatible with zenika/alpine-chrome:latest = Chrome 124)
 ENV CHROMEDRIVER_VERSION=124.0.6367.118
 
-# ✅ CORRECTED: download from official storage.googleapis.com
-RUN curl -Lo /tmp/chromedriver_linux64.zip https://storage.googleapis.com/chrome-for-testing-public/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64.zip && \
-    unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ && \
-    mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
+# ✅ BON LIEN + unzip correct
+RUN curl -Lo /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64/chromedriver-linux64.zip && \
+    unzip /tmp/chromedriver.zip -d /tmp/ && \
+    mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver && \
-    rm -rf /usr/local/bin/chromedriver-linux64 /tmp/chromedriver_linux64.zip
+    rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
 
-# Python app setup
 WORKDIR /app
 COPY . /app
 
