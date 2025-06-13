@@ -9,6 +9,7 @@ RUN curl -Lo /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-tes
     unzip /tmp/chromedriver.zip -d /tmp/ && \
     mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver && \
+    ls -l /usr/local/bin/chromedriver && \
     rm -rf /tmp/chromedriver.zip /tmp/chromedriver-linux64
 
 WORKDIR /app
