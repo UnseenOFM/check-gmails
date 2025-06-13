@@ -62,28 +62,34 @@ def check_gmails_with_emailscan(gmails):
                 print("ERREUR: Screenshot failed:", e, flush=True)
 
             try:
-                # ✅ Attente dynamique que les résultats contenant des @gmail.com soient visibles
+                # Attendre que les divs contenant les résultats apparaissent
                 WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located(
-                        (By.XPATH, '//div[contains(@class, "overflow-auto")]//span[contains(text(), "@gmail.com")]')
+                        (By.XPATH, '//div[@class="font-semibold max-w-[50vw] whitespace-nowrap text-green-500"]')
                     )
                 )
 
-                # ✅ Sélecteur plus précis
-                results = driver.find_elements(
+                result_divs = driver.find_elements(
                     By.XPATH,
-                    '//div[contains(@class, "overflow-auto")]//span[contains(text(), "@gmail.com")]'
+                    '//div[@class="font-semibold max-w-[50vw] whitespace-nowrap text-green-500"]'
                 )
 
-                print("DEBUG: Nombre d'éléments trouvés:", len(results), flush=True)
-                for el in results:
-                    print(" -", el.text, flush=True)
+                print("DEBUG: Nombre de résultats détectés:", len(result_divs), flush=True)
 
-                batch_valid = [el.text for el in results if el.text and '@gmail.com' in el.text]
-                print("DEBUG: Emails valides trouvés dans ce batch:", batch_valid, flush=True)
+                batch_valid = []
+                for el in result_divs:
+                    text = el.text.strip()
+                    print(" - Result line:", text, flush=True)
+                    if "|" in text and "@gmail.com" in text:
+                        parts = text.split("|")
+                        if len(parts) > 1:
+                            email = parts[1].strip()
+                            batch_valid.append(email)
+
+                print("DEBUG: Emails valides extraits via résultats verts:", batch_valid, flush=True)
                 valid_emails.extend(batch_valid)
             except Exception as e:
-                print("ERREUR: Impossible de récupérer les emails valides:", e, flush=True)
+                print("ERREUR: Impossible de récupérer les emails valides via résultats verts:", e, flush=True)
 
             time.sleep(2)
     except Exception as e:
