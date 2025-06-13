@@ -1,8 +1,9 @@
 from flask import Flask, request, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import os
 
@@ -12,22 +13,24 @@ def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
     
     chrome_options = Options()
-    chrome_options.binary_location = "/usr/bin/chromium-browser"
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.binary_location = "/usr/bin/chromium-browser"
 
     valid_emails = []
     try:
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
-        
+        driver_path = ChromeDriverManager().install()
+        service = Service(driver_path)
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+
         for i in range(0, len(gmails), 10):
             batch = gmails[i:i+10]
             print(f"DEBUG: Batch {i//10+1} envoyé à emailscan.in:", batch, flush=True)
             gmails_input = "\n".join(batch)
             driver.get("https://emailscan.in")
             time.sleep(2)
-            
+
             try:
                 textarea = driver.find_element(By.XPATH, '/html/body/div[1]/div[2]/main/div/div[2]/div/div[1]/div/textarea')
                 textarea.clear()
@@ -53,12 +56,10 @@ def check_gmails_with_emailscan(gmails):
                 valid_emails.extend(batch_valid)
             except Exception as e:
                 print("ERREUR: Impossible de récupérer les emails valides:", e, flush=True)
-            
+
             time.sleep(2)
-    
     except Exception as e:
         print("ERREUR Selenium globale:", e, flush=True)
-    
     finally:
         try:
             driver.quit()
