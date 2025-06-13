@@ -53,8 +53,21 @@ def check_gmails_with_emailscan(gmails):
                 continue
 
             time.sleep(5)
+
+            # 🧪 DEBUG VISUEL
             try:
-                results = driver.find_elements(By.XPATH, '//div[contains(@class, "flex flex-col gap-2")]/div//span')
+                driver.save_screenshot("screenshot.png")
+                print("DEBUG: Screenshot saved.", flush=True)
+            except Exception as e:
+                print("ERREUR: Screenshot failed:", e, flush=True)
+
+            try:
+                # ✅ Nouveau XPath plus fiable
+                results = driver.find_elements(By.XPATH, '//div[contains(@class, "flex") and contains(@class, "items-center")]/div/span')
+                print("DEBUG: Nombre d'éléments trouvés:", len(results), flush=True)
+                for el in results:
+                    print(" -", el.text, flush=True)
+
                 batch_valid = [el.text for el in results if el.text and '@gmail.com' in el.text]
                 print("DEBUG: Emails valides trouvés dans ce batch:", batch_valid, flush=True)
                 valid_emails.extend(batch_valid)
@@ -79,12 +92,10 @@ def check_gmails():
     print("DEBUG: Données reçues dans la requête:", data, flush=True)
 
     emails_raw = data.get("emails", [])
-    if isinstance(emails_raw, str):
-        gmails = [e.strip() for e in emails_raw.replace(",", "\n").splitlines() if e.strip()]
-    elif isinstance(emails_raw, list):
-        gmails = emails_raw
-    else:
+    if not isinstance(emails_raw, list):
         gmails = [e.strip() for e in str(emails_raw).replace(",", "\n").splitlines() if e.strip()]
+    else:
+        gmails = emails_raw
 
     valid_gmails = check_gmails_with_emailscan(gmails)
     print("DEBUG: Emails valides retournés:", valid_gmails, flush=True)
