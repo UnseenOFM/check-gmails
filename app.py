@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import chromedriver_autoinstaller
 import time
 import os
@@ -19,6 +21,7 @@ def check_gmails_with_emailscan(gmails):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
 
     valid_emails = []
     try:
@@ -41,9 +44,11 @@ def check_gmails_with_emailscan(gmails):
                 continue
 
             try:
-                check_button = driver.find_element(By.XPATH, '/html/body/div[1]/div[2]/main/div/div[2]/div/div[2]/div[2]/div[2]/button[2]')
-                check_button.click()
-                print("DEBUG: Bouton 'Check' cliqué.", flush=True)
+                check_button = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[2]/main/div/div[2]/div/div[2]/div[2]/div[2]/button[2]'))
+                )
+                driver.execute_script("arguments[0].click();", check_button)
+                print("DEBUG: Bouton 'Check' cliqué (via JS).", flush=True)
             except Exception as e:
                 print("ERREUR: Impossible de cliquer sur 'Check':", e, flush=True)
                 continue
