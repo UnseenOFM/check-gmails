@@ -5,10 +5,9 @@ RUN apk add --no-cache python3 py3-pip curl unzip
 
 ENV CHROMEDRIVER_VERSION=137.0.7151.70
 
-# 🧠 Ajusté : on liste d’abord le contenu puis on le place manuellement
-RUN curl -Lo /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/$CHROMEDRIVER_VERSION/linux64/chromedriver-linux64.zip && \
+RUN curl -Lo /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip && \
     unzip /tmp/chromedriver.zip -d /tmp/chromedriver && \
-    find /tmp/chromedriver -name chromedriver -exec mv {} /usr/local/bin/chromedriver \; && \
+    mv /tmp/chromedriver/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver && \
     rm -rf /tmp/chromedriver /tmp/chromedriver.zip
 
