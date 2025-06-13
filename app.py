@@ -14,7 +14,13 @@ def check_gmails_with_emailscan(gmails):
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    service = Service('/usr/local/bin/chromedriver')
+    # Log les fichiers présents dans /opt/selenium
+    try:
+        print("DEBUG: Fichiers dans /opt/selenium :", os.listdir('/opt/selenium'), flush=True)
+    except Exception as e:
+        print("ERREUR: Impossible de lister /opt/selenium :", e, flush=True)
+    # Utilise le chemin /opt/selenium/chromedriver
+    service = Service('/opt/selenium/chromedriver')
     valid_emails = []
     try:
         driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -41,7 +47,6 @@ def check_gmails_with_emailscan(gmails):
                 continue
             time.sleep(5)
             try:
-                # Récupération directe des emails valides (sans pyperclip)
                 results = driver.find_elements(By.XPATH, '//div[contains(@class, "flex flex-col gap-2")]/div//span')
                 batch_valid = [el.text for el in results if el.text and '@gmail.com' in el.text]
                 print("DEBUG: Emails valides trouvés dans ce batch:", batch_valid, flush=True)
