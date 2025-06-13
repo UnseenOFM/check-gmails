@@ -112,6 +112,16 @@ def check_gmails():
     print("DEBUG: Emails valides retournés:", valid_gmails, flush=True)
     return jsonify({"valid_emails": valid_gmails})
 
+
+@app.route('/screenshot')
+def get_screenshot():
+    if os.path.exists("screenshot.png"):
+        return app.send_static_file("screenshot.png")
+    return "No screenshot available", 404
+
+
+app.static_folder = "."
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
