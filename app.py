@@ -16,10 +16,9 @@ def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
 
     chromedriver_autoinstaller.install()
-
-    chrome_path = shutil.which("google-chrome") or shutil.which("chrome")
-    driver_path = chromedriver_autoinstaller.utils.get_chrome_version().split('.')[0]
-    driver_path = f"/app/venv/lib/python3.11/site-packages/chromedriver_autoinstaller/{driver_path}/chromedriver"
+    driver_version = chromedriver_autoinstaller.utils.get_chrome_version().split('.')[0]
+    driver_path = f"/app/venv/lib/python3.11/site-packages/chromedriver_autoinstaller/{driver_version}/chromedriver"
+    service = Service(driver_path)
 
     chrome_options = Options()
     chrome_options.add_argument("--headless")
