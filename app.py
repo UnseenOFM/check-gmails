@@ -4,9 +4,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
 import chromedriver_autoinstaller
 import time
 import os
+import shutil
 
 app = Flask(__name__)
 
@@ -14,6 +16,10 @@ def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
 
     chromedriver_autoinstaller.install()
+
+    chrome_path = shutil.which("google-chrome") or shutil.which("chrome")
+    driver_path = chromedriver_autoinstaller.utils.get_chrome_version().split('.')[0]
+    driver_path = f"/app/venv/lib/python3.11/site-packages/chromedriver_autoinstaller/{driver_path}/chromedriver"
 
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -24,7 +30,7 @@ def check_gmails_with_emailscan(gmails):
 
     valid_emails = []
     try:
-        driver = webdriver.Chrome(options=chrome_options)
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
         for i in range(0, len(gmails), 10):
             batch = gmails[i:i+10]
