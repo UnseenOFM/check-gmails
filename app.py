@@ -15,16 +15,22 @@ app = Flask(__name__)
 def check_gmails_with_emailscan(gmails):
     print("DEBUG: Gmails reçus:", gmails, flush=True)
 
+    # 📍 1. Définir chemin Chrome + Chromedriver
+    os.environ["PATH"] += os.pathsep + "/usr/bin"
+    os.environ["GOOGLE_CHROME_BIN"] = "/usr/bin/google-chrome"
+    
+    # 📍 2. Installer le driver (si pas déjà) et récupérer le chemin exact
+    driver_path = chromedriver_autoinstaller.install()
+    service = Service(driver_path)
+
+    # 📍 3. Options Chrome
     chrome_options = Options()
+    chrome_options.binary_location = "/usr/bin/google-chrome"
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
-
-    driver_path = "/app/venv/lib/python3.11/site-packages/chromedriver_autoinstaller/124/chromedriver"
-    service = Service(driver_path)
-
     valid_emails = []
     try:
         driver = webdriver.Chrome(service=service, options=chrome_options)
