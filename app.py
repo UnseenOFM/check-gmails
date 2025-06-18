@@ -22,7 +22,7 @@ def check_gmails_with_emailscan(gmails):
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
 
-    driver_path = chromedriver_autoinstaller.install()
+    driver_path = "/usr/bin/chromedriver"
     service = Service(driver_path)
 
     valid_emails = []
