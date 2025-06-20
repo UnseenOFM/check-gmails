@@ -10,7 +10,6 @@ import time
 import os
 import shutil
 from threading import Lock  # 🔒 Ajout
-y
 selenium_lock = Lock()      # 🔒 Ajout
 
 app = Flask(__name__)
