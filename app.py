@@ -9,8 +9,10 @@ import chromedriver_autoinstaller
 import time
 import os
 import shutil
-from threading import Lock  # 🔒 Ajout
+from threading import Lock, Semaphore  # 🔒 Ajout
+
 selenium_lock = Lock()      # 🔒 Ajout
+semaphore = Semaphore(1)    # 🔒 Ajout
 
 app = Flask(__name__)
 
@@ -68,13 +70,6 @@ def check_gmails_with_emailscan(gmails):
 
                 time.sleep(5)
 
-                # 🧪 DEBUG VISUEL
-                try:
-                    driver.save_screenshot("screenshot.png")
-                    print("DEBUG: Screenshot saved.", flush=True)
-                except Exception as e:
-                    print("ERREUR: Screenshot failed:", e, flush=True)
-
                 try:
                     WebDriverWait(driver, 10).until(
                         EC.presence_of_element_located(
@@ -127,16 +122,11 @@ def check_gmails():
     else:
         gmails = emails_raw
 
-    valid_gmails = check_gmails_with_emailscan(gmails)
+    with semaphore:  # 🔒 Ajouté pour protéger contre les requêtes simultanées
+        valid_gmails = check_gmails_with_emailscan(gmails)
+
     print("DEBUG: Emails valides retournés:", valid_gmails, flush=True)
     return jsonify({"valid_emails": valid_gmails})
-
-
-@app.route('/screenshot')
-def get_screenshot():
-    if os.path.exists("screenshot.png"):
-        return app.send_static_file("screenshot.png")
-    return "No screenshot available", 404
 
 
 app.static_folder = "."
