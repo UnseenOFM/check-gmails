@@ -36,7 +36,7 @@ def check_gmails_with_emailscan(gmails):
         valid_emails = []
 
         try:
-            driver = webdriver.Chrome(service=service, options=chrome_options)
+            driver_path = chromedriver_autoinstaller.install()
             service = Service(driver_path)
             driver = webdriver.Chrome(service=service, options=chrome_options)
 
