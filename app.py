@@ -37,6 +37,8 @@ def check_gmails_with_emailscan(gmails):
 
         try:
             driver = webdriver.Chrome(service=service, options=chrome_options)
+            service = Service(driver_path)
+            driver = webdriver.Chrome(service=service, options=chrome_options)
 
             for i in range(0, len(gmails), 10):
                 batch = gmails[i:i+10]
