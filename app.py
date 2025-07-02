@@ -24,10 +24,6 @@ def check_gmails_with_emailscan(gmails):
         os.environ["PATH"] += os.pathsep + "/usr/bin"
         os.environ["GOOGLE_CHROME_BIN"] = "/usr/bin/google-chrome"
 
-        # 📍 2. Installer le driver (si pas déjà) et récupérer le chemin exact
-        driver_path = chromedriver_autoinstaller.install()
-        service = Service(driver_path)
-
         # 📍 3. Options Chrome
         chrome_options = Options()
         chrome_options.binary_location = "/usr/bin/google-chrome"
